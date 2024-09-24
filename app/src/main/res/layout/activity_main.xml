@@ -17,5 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
+        app:itemBackground="@color/quantum_deeppurple50"
         app:menu="@menu/activity_main_drawer" />
 </RelativeLayout>
