@@ -126,4 +126,14 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_main">MainActivity</string>
+
+    <string-array name="sample_searchfeed">
+    <item>sky_tower</item>
+    <item>auckland_art_gallery</item>
+    <item>civic_theatre</item>
+    <item>cornwall_park</item>
+    <item>motat</item>
+    <item>hamilton_gardens</item>
+    <item>mission_bay</item>
+    <item>mt_maunganui</item>
 </resources>
