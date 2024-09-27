@@ -10,28 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.hodofiles.R;
 import com.example.hodofiles.databinding.FragmentSettingsBinding;
+import com.example.hodofiles.ui.maps.MapsViewModel;
 
 public class SettingsFragment extends Fragment {
 
-    private FragmentSettingsBinding binding;
+    //Initialise View Model
+    private SettingsViewModel settingsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        SettingsViewModel homeViewModel =
-                new ViewModelProvider(this).get(SettingsViewModel.class);
-
-        binding = FragmentSettingsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        //final TextView textView = binding.textHome;
-        //SettingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return root;
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }

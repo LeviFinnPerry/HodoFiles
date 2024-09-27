@@ -10,7 +10,7 @@ public class SearchFeedViewModel extends ViewModel {
 
     public SearchFeedViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        mText.setValue("This is Search Feed fragment");
     }
 
     public LiveData<String> getText() {

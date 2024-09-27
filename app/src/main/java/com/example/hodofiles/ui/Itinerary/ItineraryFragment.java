@@ -10,27 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.hodofiles.R;
 import com.example.hodofiles.databinding.FragmentItineraryBinding;
+import com.example.hodofiles.ui.maps.MapsViewModel;
 
 public class ItineraryFragment extends Fragment {
 
-    private FragmentItineraryBinding binding;
+    //Initialise View Model
+    private ItineraryViewModel itineraryViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ItineraryViewModel itineraryViewModel =
-                new ViewModelProvider(this).get(ItineraryViewModel.class);
-
-        binding = FragmentItineraryBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        final TextView textView = binding.textNotifications;
-        return root;
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }
