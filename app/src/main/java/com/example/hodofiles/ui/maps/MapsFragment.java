@@ -10,28 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.hodofiles.R;
 import com.example.hodofiles.databinding.FragmentMapsBinding;
 
 public class MapsFragment extends Fragment {
 
-    private FragmentMapsBinding binding;
+    //Initialise View Model
+    private MapsViewModel mapsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        MapsViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(MapsViewModel.class);
-
-        binding = FragmentMapsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        final TextView textView = binding.textDashboard;
-        //MapsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return root;
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }

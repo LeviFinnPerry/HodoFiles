@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.hodofiles.ui.Itinerary.ItineraryFragment;
 import com.example.hodofiles.ui.Itinerary.ItineraryViewModel;
@@ -40,25 +43,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Initialise View Models
-        mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
-        searchFeedViewModel = new ViewModelProvider(this).get(SearchFeedViewModel.class);
-        itineraryViewModel = new ViewModelProvider(this).get(ItineraryViewModel.class);
-        settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
-
-        //Setup BottomNavigationView
+        //Setup Main View
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        // Set the default fragment (MapsFragment)
-        if (savedInstanceState == null) {
-            //Initialise fragments as it is first run
-            mapsFragment = new MapsFragment();
-            searchFeedFragment = new SearchFeedFragment();
-            itineraryFragment = new ItineraryFragment();
-            settingsFragment = new SettingsFragment();
-
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapsFragment()).commit();
-        }
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        NavController navController = navHostFragment.getNavController();
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
     }
 

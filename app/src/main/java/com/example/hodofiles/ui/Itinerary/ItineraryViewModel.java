@@ -10,7 +10,7 @@ public class ItineraryViewModel extends ViewModel {
 
     public ItineraryViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        mText.setValue("This is Itinerary fragment");
     }
 
     public LiveData<String> getText() {
