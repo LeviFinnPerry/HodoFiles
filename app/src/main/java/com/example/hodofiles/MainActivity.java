@@ -1,37 +1,65 @@
 package com.example.hodofiles;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.hodofiles.databinding.ActivityMainBinding;
+import com.example.hodofiles.ui.Itinerary.ItineraryFragment;
+import com.example.hodofiles.ui.Itinerary.ItineraryViewModel;
+import com.example.hodofiles.ui.maps.MapsFragment;
+import com.example.hodofiles.ui.maps.MapsViewModel;
+import com.example.hodofiles.ui.searchfeed.SearchFeedFragment;
+import com.example.hodofiles.ui.searchfeed.SearchFeedViewModel;
+import com.example.hodofiles.ui.settings.SettingsFragment;
+import com.example.hodofiles.ui.settings.SettingsViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+    //Declare viewable models
+    private MapsViewModel mapsViewModel;
+    private SearchFeedViewModel searchFeedViewModel;
+    private ItineraryViewModel itineraryViewModel;
+    private SettingsViewModel settingsViewModel;
+
+    //Declare fragments
+    private MapsFragment mapsFragment;
+    private SearchFeedFragment searchFeedFragment;
+    private ItineraryFragment itineraryFragment;
+    private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        //Initialise View Models
+        mapsViewModel = new ViewModelProvider(this).get(MapsViewModel.class);
+        searchFeedViewModel = new ViewModelProvider(this).get(SearchFeedViewModel.class);
+        itineraryViewModel = new ViewModelProvider(this).get(ItineraryViewModel.class);
+        settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_map, R.id.navigation_searchfeed, R.id.navigation_itinerary)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        //Setup BottomNavigationView
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        // Set the default fragment (MapsFragment)
+        if (savedInstanceState == null) {
+            //Initialise fragments as it is first run
+            mapsFragment = new MapsFragment();
+            searchFeedFragment = new SearchFeedFragment();
+            itineraryFragment = new ItineraryFragment();
+            settingsFragment = new SettingsFragment();
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapsFragment()).commit();
+        }
+
     }
 
 }
