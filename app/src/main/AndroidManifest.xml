@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +17,9 @@
         android:theme="@style/Theme.HodoFiles"
         tools:targetApi="31">
         <activity
+            android:name=".MapsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -24,9 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCQOGY0RtT4wvImK_zuRAwDvX_a4ME-nCU"/>
+            android:value="AIzaSyA1tTNrD6dpp5jjvU06oCoI8UVatuGYkwY" />
     </application>
 
 </manifest>

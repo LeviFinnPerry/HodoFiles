@@ -17,7 +17,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/textView_Search"
+        android:id="@+id/textView_Searcha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Maximum Distance (10km)" />
@@ -33,7 +33,7 @@
         android:progress="3" />
 
     <TextView
-        android:id="@+id/textView_Search"
+        android:id="@+id/textView_Searchb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -45,7 +45,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_$"
+            android:id="@+id/chip_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -53,7 +53,7 @@
             android:textAlignment="center" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_$$"
+            android:id="@+id/chip_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -61,7 +61,7 @@
             android:textAlignment="center" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_$$$"
+            android:id="@+id/chip_c"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -92,7 +92,7 @@
             android:textSize="10sp" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_Museum"
+            android:id="@+id/chip_Museuma"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -100,7 +100,7 @@
             android:textSize="10sp" />
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/chip_Museum"
+            android:id="@+id/chip_Museumb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

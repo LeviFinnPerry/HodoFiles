@@ -1,4 +1,5 @@
 plugins {
+
     alias(libs.plugins.android.application)
 }
 
@@ -34,6 +35,7 @@ android {
     }
 }
 
+
 dependencies {
 
     implementation(libs.appcompat)
@@ -45,6 +47,8 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.preference)
     implementation(libs.play.services.maps)
+    implementation(libs.activity)
+    implementation(libs.places)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

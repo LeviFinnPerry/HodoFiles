@@ -1,13 +1,9 @@
 package com.example.hodofiles;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -21,7 +17,6 @@ import com.example.hodofiles.ui.searchfeed.SearchFeedViewModel;
 import com.example.hodofiles.ui.settings.SettingsFragment;
 import com.example.hodofiles.ui.settings.SettingsViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -49,7 +44,11 @@ public class MainActivity extends AppCompatActivity {
                 (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         NavController navController = navHostFragment.getNavController();
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-
+        Intent swap = new Intent(this, MapsActivity.class);
+        startActivity(swap);
     }
+
+
+
 
 }
