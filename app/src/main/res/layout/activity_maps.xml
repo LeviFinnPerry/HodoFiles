@@ -29,7 +29,7 @@
         android:id="@+id/materialToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/system_secondary_container_light"
+        android:background="@android:color/Light_Purple"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:targetApi="upside_down_cake" />
