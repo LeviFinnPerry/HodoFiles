@@ -22,11 +22,6 @@
     <string name="search">Search</string>
     <string name="filter">Filter</string>
     <string name="search_places">Search places</string>
-    <string name="search_here">Search here</string>
-    <string name="search">Search</string>
-    <string name="filter">Filter</string>
-    <string name="search_places">Search places</string>
-
     <string-array name="button_names">
         <item>Art Gallery</item>
         <item>Museum</item>

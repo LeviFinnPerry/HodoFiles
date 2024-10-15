@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.Manifest;
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import android.content.pm.PackageManager;
 
@@ -24,6 +27,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import java.util.Arrays;
@@ -40,14 +44,19 @@ public class MapsActivity  extends FragmentActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
 
 
+
+
         // Sets the content view for the maps fragment
         ActivityMapsBinding binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         MapView mapFragment =  findViewById(R.id.mapView);
-        if (mapFragment != null) mapFragment.getMapAsync(this);
-        mMap.
+        mapFragment.onCreate(savedInstanceState);
+        mapFragment.getMapAsync(this);
+
+
+
 
 
         // Calls the method that sets up the autocomplete search bar for google maps
@@ -121,7 +130,7 @@ public class MapsActivity  extends FragmentActivity implements OnMapReadyCallbac
     public void setAutoCompleteFragment() {
         // Checks if places have been initialised yet
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "AIzaSyA5pUxD_2Xi1s-bga4itPVaq-VblEHmxg8", Locale.US);
+            Places.initialize(getApplicationContext(), "AIzaSyAmeofIZbv8pgpxghqjKb_WOw_M6KSZ9So", Locale.US);
         }
 
         // Initialize the AutocompleteSupportFragment.
@@ -139,7 +148,8 @@ public class MapsActivity  extends FragmentActivity implements OnMapReadyCallbac
                  * */
                 @Override
                 public void onPlaceSelected(@NonNull Place place) {
-                    latLng = place.getLatLng();
+                    latLng = place.getLocation();
+
                     displayCurrentLocation();
                 }
 

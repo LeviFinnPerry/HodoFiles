@@ -1,5 +1,6 @@
 package com.example.hodofiles;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -35,11 +36,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent swap = new Intent(this, MapsActivity.class);
+        startActivity(swap);
 
         //Set default fragment when the app loads
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SearchFeedFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.searchfeed_container, new SearchFeedFragment()).commit();
         }
+
+
 
         //Handle bottom navigation item clicks
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);

@@ -4,27 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/maps_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MapsActivity">
 
-    <androidx.constraintlayout.helper.widget.Layer
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="bar,materialToolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <androidx.constraintlayout.helper.widget.Layer-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:constraint_referenced_ids="bar,materialToolbar"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck"
-        android:apiKey="AIzaSyCQOGY0RtT4wvImK_zuRAwDvX_a4ME-nCU"/>
+
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
@@ -46,13 +39,25 @@
         users to search for particular locations.-->
     <androidx.fragment.app.FragmentContainerView android:id="@+id/autocomplete_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
 
+        tools:layout="@layout/places_autocomplete_fragment" />
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="635sp"
+        android:layout_weight="1"
+        app:layout_constraintTop_toBottomOf="@id/autocomplete_fragment"
+        android:apiKey="AIzaSyAmeofIZbv8pgpxghqjKb_WOw_M6KSZ9So"
         />
 
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

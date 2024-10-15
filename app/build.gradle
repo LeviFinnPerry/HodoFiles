@@ -1,6 +1,11 @@
+buildscript {
+    dependencies {
+        classpath libs.secrets.gradle.plugin
+    }
+}
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+//    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
 }
 
 android {
@@ -9,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.hodofiles"
-        minSdk 21
+        minSdk 27
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -38,8 +43,8 @@ dependencies {
     implementation libs.material
     implementation libs.play.services.maps
     implementation libs.play.services.location
-    implementation libs.play.services.places
-    implementation libs.auth.api.impl
+    implementation libs.places
+//    implementation libs.au .auth.api.impl
     implementation libs.constraintlayout
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx
