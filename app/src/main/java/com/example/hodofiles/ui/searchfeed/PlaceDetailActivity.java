@@ -37,11 +37,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         // Get the data passed from the search feed
         Intent intent = getIntent();
-        String placeName = intent.getStringExtra("PLACE_NAME");
-        String address = intent.getStringExtra("ADDRESS");
-        String openingHours = intent.getStringExtra("OPENING_HOURS");
-        String contact = intent.getStringExtra("CONTACT");
         String placeId = intent.getStringExtra("PLACE_ID");
+        String openingHours = intent.getStringExtra("OPENING_HOURS");
 
         // Find views and populate with data
         TextView placeNameTextView = findViewById(R.id.place_detail_name);
@@ -49,12 +46,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
         TextView openingHoursTextView = findViewById(R.id.place_opening_hours);
         TextView contactTextView = findViewById(R.id.place_contact);
         ImageView placeImageView = findViewById(R.id.place_image);
-
-        // Set the data in the views
-        placeNameTextView.setText(placeName);
-        addressTextView.setText("Address: " + address);
-        openingHoursTextView.setText("Opening Hours: " + openingHours);
-        contactTextView.setText(contact);
 
         if (placeId != null) {
             PlacesClient placesClient = Places.createClient(this);
@@ -77,19 +68,15 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
 
-                    // Log when a photo is fetched successfully
-                    Log.d("SearchFeed", "Fetched photo for place: " + placeName);
-
                     // Set place name and image
                     placeImageView.setImageBitmap(bitmap);
-
+                    placeNameTextView.setText(place.getName());
                     addressTextView.setText("Address: " + place.getAddress());
-                    openingHoursTextView.setText("Opening Hours: " + place.getOpeningHours().getWeekdayText().get(0));
-                    contactTextView.setText(place.getPhoneNumber());
-                    Log.d("SearchFeed", "Added place to adapter: " + placeName);
+                    //openingHoursTextView.setText("Opening Hours: " + place.getOpeningHours().getWeekdayText().get(0));
+                    //contactTextView.setText(place.getPhoneNumber());
                 }).addOnFailureListener(e -> {
                     // Log any errors while fetching the photo
-                    Log.e("SearchFeed", "Failed to fetch photo for place: " + placeName, e);
+                    Log.e("SearchFeed", "Failed to fetch photo for place: " + place.getName(), e);
                 });
                 }
             });

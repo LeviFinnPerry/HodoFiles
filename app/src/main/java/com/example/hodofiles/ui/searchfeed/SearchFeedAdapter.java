@@ -1,32 +1,24 @@
 package com.example.hodofiles.ui.searchfeed;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
 import com.etsy.android.grid.util.DynamicHeightImageView;
 import com.example.hodofiles.R;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -44,41 +36,46 @@ public class SearchFeedAdapter extends BaseAdapter {
         Button btnGo;
     }
 
-    // Variables to store place names and photos
-    private final ArrayList<Place> places;
+    private final ArrayList<PlacesResponse.PlaceResult> places;
     private final Map<String, Bitmap> placePhotos;
 
     private final LayoutInflater mLayoutInflater;
     private final Random mRandom;
     private final Context mContext;
+    private OnItemClickListener onItemClickListener;
 
     private static final SparseArray<Double> sPositionHeightRatios = new SparseArray<Double>();
 
-    public SearchFeedAdapter(final Context context) {
+    public interface OnItemClickListener {
+        void onItemClick(PlacesResponse.PlaceResult place);
+    }
+
+    public SearchFeedAdapter(final Context context, OnItemClickListener listener) {
         mLayoutInflater = LayoutInflater.from(context);
         mRandom = new Random();
         mContext = context;
+        onItemClickListener = listener;
 
         places = new ArrayList<>();
         placePhotos = new HashMap<>();
     }
 
     // Add a place and its photo to the adapter
-    public void addPlaceWithPhoto(Place place, Bitmap photo) {
+    public void addPlaceWithPhoto(PlacesResponse.PlaceResult placeResult, Bitmap photo) {
         // Check if place is already in the list
         boolean isDuplicate = false;
-        for (Place p : places) {
-            if (p.getId().equals(place.getId())) {
+        for (PlacesResponse.PlaceResult p : places) {
+            if (p.getPlaceId().equals(placeResult.getPlaceId())) {
                 isDuplicate = true;
                 break;
             }
         }
 
         if (!isDuplicate) {
-            places.add(place);  // Add place to the list
-            placePhotos.put(place.getId(), photo);  // Store photo in the map using place ID as the key
+            places.add(placeResult);  // Add place to the list
+            placePhotos.put(placeResult.getPlaceId(), photo);  // Store photo in the map using place ID as the key
 
-            Log.d(TAG, "Place added: " + place.getName() + ", Photo: " + (photo != null ? "Available" : "Not available"));
+            Log.d(TAG, "Place added: " + placeResult.getName() + ", Photo: " + (photo != null ? "Available" : "Not available"));
             notifyDataSetChanged();  // Notify that data has changed to refresh the grid view
         }
     }
@@ -89,7 +86,7 @@ public class SearchFeedAdapter extends BaseAdapter {
     }
 
     @Override
-    public Place getItem(int position) {
+    public PlacesResponse.PlaceResult getItem(int position) {
         return places.get(position);  // Get place at the given position
     }
 
@@ -117,10 +114,10 @@ public class SearchFeedAdapter extends BaseAdapter {
         vh.imgLineOne.setHeightRatio(positionHeight);
 
         // Get the current place
-        Place place = getItem(position);
+        PlacesResponse.PlaceResult place = getItem(position);
         if (place != null) {
             String placeName = place.getName();
-            Bitmap placePhoto = placePhotos.get(place.getId());
+            Bitmap placePhoto = placePhotos.get(place.getPlaceId());
 
             Log.d(TAG, "Displaying place: " + placeName);
 
@@ -130,7 +127,7 @@ public class SearchFeedAdapter extends BaseAdapter {
                 vh.placeName.setText(placeName);
                 Log.d(TAG, "Photo set for place: " + placeName);
             } else {
-                vh.imgLineOne.setImageResource(R.drawable.museum);  // Set a placeholder image
+                //vh.imgLineOne.setImageResource(R.drawable.museum);  // Set a placeholder image
                 Log.d(TAG, "No photo available, using placeholder for place: " + placeName);
             }
 
@@ -144,6 +141,13 @@ public class SearchFeedAdapter extends BaseAdapter {
         } else {
             Log.e(TAG, "Error: Place is null at position " + position);
         }
+
+        // Set the click listener for each item
+        convertView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(places.get(position));
+            }
+        });
 
         return convertView;
     }
