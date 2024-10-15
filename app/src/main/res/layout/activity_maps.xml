@@ -9,7 +9,7 @@
     <androidx.constraintlayout.helper.widget.Layer
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="search_bar,materialToolbar"
+        app:constraint_referenced_ids="bar,materialToolbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,28 +23,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck"
+        android:apiKey="AIzaSyCQOGY0RtT4wvImK_zuRAwDvX_a4ME-nCU"/>
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/system_secondary_container_light"
+        android:background="@android:color/holo_purple"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:targetApi="upside_down_cake" />
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_bar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_wrapBehaviorInParent="vertical_only">
 
-    </androidx.appcompat.widget.SearchView>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/bar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--Autocomplete Fragment - the search bar displayed at the top of the activity that allows
+        users to search for particular locations.-->
+    <androidx.fragment.app.FragmentContainerView android:id="@+id/autocomplete_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

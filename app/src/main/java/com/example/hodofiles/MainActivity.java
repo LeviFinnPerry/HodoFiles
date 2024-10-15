@@ -1,9 +1,15 @@
 package com.example.hodofiles;
-
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.content.pm.PackageManager;
+import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -21,33 +27,42 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Declare viewable models
-    private MapsViewModel mapsViewModel;
-    private SearchFeedViewModel searchFeedViewModel;
-    private ItineraryViewModel itineraryViewModel;
-    private SettingsViewModel settingsViewModel;
-
-    //Declare fragments
-    private MapsFragment mapsFragment;
-    private SearchFeedFragment searchFeedFragment;
-    private ItineraryFragment itineraryFragment;
-    private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Setup Main View
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        NavController navController = navHostFragment.getNavController();
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        // Removes/Hides the action bar from the screen
+        ActionBar actionbar = getSupportActionBar();
+        if (actionbar != null) actionbar.hide();
+
+        // Checks if location has been granted
+        checkLocationPermissionGranted();
+
         Intent swap = new Intent(this, MapsActivity.class);
         startActivity(swap);
     }
 
+    public void checkLocationPermissionGranted() {
+        // Checks if the location permissions have been granted
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // If access to the users location hasn't been specified, a request is then generated.
+            ActivityResultLauncher<String[]> locationPermissionRequest =
+                    registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                        result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
+                        result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false);
+                    });
+
+            // Generate the location permission request to the user
+            locationPermissionRequest.launch(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            });
+        }
+    }
 
 
 

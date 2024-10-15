@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@menu/itinerary"
-        app:menu="@menu/activity_main_drawer" />
+        android:fitsSystemWindows="true">
+
+    </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

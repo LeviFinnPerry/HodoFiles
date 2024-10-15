@@ -12,16 +12,23 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HodoFiles"
         tools:targetApi="31">
+        <uses-library android:name="com.google.android.maps" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCQOGY0RtT4wvImK_zuRAwDvX_a4ME-nCU" />
+
         <activity
             android:name=".MapsActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="gbh"
+            android:noHistory="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,9 +36,7 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA1tTNrD6dpp5jjvU06oCoI8UVatuGYkwY" />
+
     </application>
 
 </manifest>

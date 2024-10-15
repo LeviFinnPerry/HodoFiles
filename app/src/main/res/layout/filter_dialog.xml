@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:indeterminateDrawable="@color/purple_200"
+        android:indeterminateDrawable="@color/Light_Purple"
         android:max="10"
         android:progress="3" />
 
