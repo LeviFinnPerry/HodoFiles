@@ -136,7 +136,7 @@ public class SearchFeedFragment extends Fragment implements AbsListView.OnScroll
 
         mGridView.setOnScrollListener(this);
         mGridView.setOnItemClickListener(this);
-        mGridView.setOnItemLongClickListener(this);
+        //mGridView.setOnItemLongClickListener(this);
 
         return rootView;
     }
@@ -155,7 +155,7 @@ public class SearchFeedFragment extends Fragment implements AbsListView.OnScroll
             Log.d("ScrollStateChanged", "Scroll state is idle");
             if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
                 Log.d("ScrollStateChanged", "At bottom, fetching more places");
-                fetchMorePlaces();
+                //fetchMorePlaces();
             }
         } else if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
             Log.d("ScrollStateChanged", "User is scrolling");
