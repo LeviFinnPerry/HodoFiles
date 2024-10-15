@@ -4,16 +4,20 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ItineraryViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<List<String>> itineraries = new MutableLiveData<>();
 
     public ItineraryViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is Itinerary fragment");
+        // Example data
+        List<String> itineraryList = Arrays.asList("Japan January 2025", "Taupo December 2024", "Queenstown August 2024");
+        itineraries.setValue(itineraryList);
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<List<String>> getItineraries() {
+        return itineraries;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.hodofiles.ui.searchfeed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.SparseArray;
@@ -12,6 +13,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.etsy.android.grid.util.DynamicHeightImageView;
 import com.example.hodofiles.R;
@@ -165,6 +168,8 @@ public class SearchFeedAdapter extends BaseAdapter {
             notifyDataSetChanged();
         }
     }
+
+
 }
 
 

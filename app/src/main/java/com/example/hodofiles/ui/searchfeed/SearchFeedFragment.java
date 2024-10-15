@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.etsy.android.grid.StaggeredGridView;
+import com.example.hodofiles.ui.searchfeed.PlaceDetailActivity;
 
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
@@ -48,6 +50,7 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,7 +61,7 @@ public class SearchFeedFragment extends Fragment implements AbsListView.OnScroll
     private static final String TAG = "SearchFeedFragment";
     public static final String SAVED_DATA_KEY = "SAVED_DATA";
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
-    private static final String DEFAULT_QUERY = "restaurants";
+    private static final String DEFAULT_QUERY = "beach";
 
     private StaggeredGridView mGridView;
     private boolean mHasRequestedMore;
@@ -105,6 +108,22 @@ public class SearchFeedFragment extends Fragment implements AbsListView.OnScroll
         Button museumButton = rootView.findViewById(R.id.searchfeed_container).findViewById(R.id.category_museum);
         museumButton.setOnClickListener(view -> {
             //Fetch or filter places related to museum
+            query ="museum";
+            fetchTopPlaces(query);
+        });
+
+        Button parkButton = rootView.findViewById(R.id.searchfeed_container).findViewById(R.id.category_park);
+        museumButton.setOnClickListener(view -> {
+            //Fetch or filter places related to museum
+            query = "park";
+            fetchTopPlaces(query);
+        });
+
+        Button restaurantButton = rootView.findViewById(R.id.searchfeed_container).findViewById(R.id.category_restaurant);
+        museumButton.setOnClickListener(view -> {
+            //Fetch or filter places related to museum
+            query = "museum";
+            fetchTopPlaces(query);
         });
 
         // Initialize grid view and adapter
@@ -167,6 +186,8 @@ public class SearchFeedFragment extends Fragment implements AbsListView.OnScroll
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Toast.makeText(getContext(), "Item Clicked: " + position, Toast.LENGTH_SHORT).show();
+            Place selectedPlace = topPlaces.get(position);  // Assuming `topPlaces` holds your place data
+            openPlaceDetailsActivity(selectedPlace);
     }
 
     @Override
@@ -272,7 +293,8 @@ public class SearchFeedFragment extends Fragment implements AbsListView.OnScroll
         }
 
         // Specify which fields to retrieve for the place
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.PHOTO_METADATAS);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG,
+                Place.Field.PHOTO_METADATAS, Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.PHONE_NUMBER);
 
         FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
 
@@ -334,43 +356,6 @@ public class SearchFeedFragment extends Fragment implements AbsListView.OnScroll
         //mHasRequestedMore = false;
     }
 
-    /**
-    private void fetchMorePlaces() {
-        // Modify the query slightly, e.g., by adding a different keyword or increasing the radius
-        String modifiedQuery = "restaurants";  // Could change based on user preference, location, etc.
-
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                .setQuery(modifiedQuery)
-                .setLocationBias(null)  // You could modify this to change the location bias
-                .build();
-
-        placesClient.findAutocompletePredictions(request).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                FindAutocompletePredictionsResponse response = task.getResult();
-                List<AutocompletePrediction> predictions = response.getAutocompletePredictions();
-
-                ArrayList<Place> newPlaces = new ArrayList<>();
-                for (AutocompletePrediction prediction : predictions) {
-                    String placeId = prediction.getPlaceId();
-                    fetchPlaceDetails(placeId, newPlaces, () -> {
-                        //updateSearchFeed(newPlaces);
-                    }); // Fetch place details for each new prediction
-                }
-
-                // Append new places to the existing list
-                topPlaces.addAll(newPlaces);
-
-                mHasRequestedMore = false;
-
-                // Update your adapter with the new places
-                updateSearchFeed(topPlaces);
-            } else {
-                Log.e("PlacesAPI", "Error fetching more places");
-            }
-        });
-    }
-    */
-
     private int pageCounter = 1; // Track how many times you've loaded more data
 
     private void fetchMorePlaces() {
@@ -381,7 +366,7 @@ public class SearchFeedFragment extends Fragment implements AbsListView.OnScroll
         isLoading = true; // Set loading flag to prevent multiple triggers
 
         // Modify the query to fetch new data (append page number or other variation)
-        String modifiedQuery = "restaurants page" + pageCounter;
+        String modifiedQuery = query + pageCounter;
 
         FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
                 .setQuery(modifiedQuery)
@@ -418,6 +403,19 @@ public class SearchFeedFragment extends Fragment implements AbsListView.OnScroll
             isLoading = false; // Reset loading flag
         });
     }
+
+    private void openPlaceDetailsActivity(Place place) {
+        Intent intent = new Intent(getActivity(), PlaceDetailActivity.class);
+
+        // Set other place details
+        intent.putExtra("PLACE_NAME", place.getName());
+        intent.putExtra("PLACE_ADDRESS", place.getAddress());
+        intent.putExtra("PLACE_CONTACT", place.getPhoneNumber()); // You can fetch contact from place object
+        intent.putExtra("PLACE_ID", place.getId());
+
+        startActivity(intent);
+    }
+
 
 }
 
