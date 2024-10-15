@@ -11,6 +11,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import com.example.hodofiles.R;
+import com.example.hodofiles.ui.searchfeed.SearchFeedFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -74,8 +75,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
     }
 
+
+
+
     private void searchPlace(String query) {
-        // Build the autocomplete request
         FindAutocompletePredictionsRequest predictionsRequest = FindAutocompletePredictionsRequest.builder()
                 .setQuery(query)
                 .build();
@@ -86,20 +89,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 return;
             }
 
-            // Get the place ID of the first prediction result
             String placeId = response.getAutocompletePredictions().get(0).getPlaceId();
-
-            // Specify the fields to return in the Place object
             List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
 
-            // Build the request
             FetchPlaceRequest placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build();
 
-            // Make a request to fetch the place
             placesClient.fetchPlace(placeRequest).addOnSuccessListener(placeResponse -> {
                 Place place = placeResponse.getPlace();
                 if (place.getLatLng() != null) {
                     LatLng latLng = place.getLatLng();
+
+                    // Create a new SearchFeedFragment and pass the lat/lng values via Bundle
+                    SearchFeedFragment searchFeedFragment = new SearchFeedFragment();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("latitude", latLng.latitude);
+                    bundle.putDouble("longitude", latLng.longitude);
+
+                    searchFeedFragment.setArguments(bundle);
+
+                    // Replace the current fragment with SearchFeedFragment
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, searchFeedFragment)
+                            .addToBackStack(null)
+                            .commit();
+
                     mMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                 }
@@ -110,4 +124,5 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(getContext(), "Error fetching autocomplete predictions: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
+
 }
