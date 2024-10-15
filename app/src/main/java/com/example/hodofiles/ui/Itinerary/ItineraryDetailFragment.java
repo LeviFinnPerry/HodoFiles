@@ -57,10 +57,7 @@ public class ItineraryDetailFragment extends Fragment {
 
         // Set initial folder name and creation date in TextViews
         TextView nameTextView = view.findViewById(R.id.itinerary_detail_title);
-        TextView dateTextView = view.findViewById(R.id.itinerary_date);
-
         nameTextView.setText(folderName);
-        dateTextView.setText("Created on: " + folderCreationDate); // Format the date as needed
 
         // Handle the back button
         Button backButton = view.findViewById(R.id.btn_back_itinerary);
