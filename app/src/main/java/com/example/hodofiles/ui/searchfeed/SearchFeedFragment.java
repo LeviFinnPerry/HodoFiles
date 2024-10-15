@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.hodofiles.R;
+import com.example.hodofiles.ui.maps.LatLong;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
@@ -64,13 +65,15 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        latitude = -37.788101;
+        longitude = 175.276993;
+
+        LatLong locationData = LatLong.getInstance();
+
         // Retrieve the arguments if they exist
-        if (getArguments() != null) {
-            latitude = getArguments().getDouble("latitude");
-            longitude = getArguments().getDouble("longitude");
-        } else {
-            latitude = -37.788101;
-            longitude = 175.276993;
+        if (locationData != null) {
+            latitude = locationData.getLatitude();
+            longitude = locationData.getLongitude();
         }
 
     }
