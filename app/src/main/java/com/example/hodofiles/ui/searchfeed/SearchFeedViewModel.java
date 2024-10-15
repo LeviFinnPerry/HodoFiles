@@ -1,16 +1,16 @@
-package com.example.hodofiles.ui.dashboard;
+package com.example.hodofiles.ui.searchfeed;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DashboardViewModel extends ViewModel {
+public class SearchFeedViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    public DashboardViewModel() {
+    public SearchFeedViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        mText.setValue("This is Search Feed fragment");
     }
 
     public LiveData<String> getText() {

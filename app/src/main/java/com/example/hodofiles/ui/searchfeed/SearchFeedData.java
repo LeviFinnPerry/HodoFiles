@@ -1,9 +1,10 @@
-package com.example.hodofiles;
+package com.example.hodofiles.ui.searchfeed;
 
 import android.content.Context;
 
+import com.example.hodofiles.R;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SearchFeedData {
     public static final int SAMPLE_DATA_ITEM_COUNT = 30;

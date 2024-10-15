@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_map">
+
+    <fragment
+        android:id="@+id/navigation_map"
+        android:name="com.example.hodofiles.ui.maps.MapsFragment"
+        android:label= "@string/title_map"
+        tools:layout="@layout/fragment_maps" />
+
+    <fragment
+        android:id="@+id/navigation_searchfeed"
+        android:name="com.example.hodofiles.ui.searchfeed.SearchFeedFragment"
+        android:label="@string/title_searchfeed"
+        tools:layout="@layout/fragment_searchfeed" />
+
+    <fragment
+        android:id="@+id/navigation_itinerary"
+        android:name="com.example.hodofiles.ui.Itinerary.ItineraryFragment"
+        android:label="@string/title_itinerary"
+        tools:layout="@layout/fragment_itinerary" />
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.hodofiles.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
+</navigation>
