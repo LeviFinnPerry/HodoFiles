@@ -8,11 +8,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.hodofiles.R;
 
@@ -22,7 +24,19 @@ public class SettingsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        Button button = view.findViewById(R.id.button_interests);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InterestFragment interestFragment = new InterestFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, interestFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+        return view;
     }
 
     @Override
@@ -48,6 +62,8 @@ public class SettingsFragment extends Fragment {
                 requireActivity().recreate();
             }
         });
+
+
     }
 
     // Save the theme preference in SharedPreferences
@@ -56,4 +72,6 @@ public class SettingsFragment extends Fragment {
         editor.putBoolean("dark_mode", isDarkMode);
         editor.apply();
     }
+
+
 }
