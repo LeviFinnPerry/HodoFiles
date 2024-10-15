@@ -7,6 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.Itinerary.ItineraryFragment">
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:navGraph="@navigation/nav_graph"
+        app:defaultNavHost="true" />
+
     <!-- RecyclerView for displaying itineraries -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/itinerary_list"

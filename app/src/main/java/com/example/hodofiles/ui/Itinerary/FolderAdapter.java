@@ -1,35 +1,30 @@
 package com.example.hodofiles.ui.Itinerary;
 
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hodofiles.R;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
-public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ViewHolder> {
+public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder> {
 
     private final List<ItineraryFolder> folders;
-    private final OnFolderClickListener folderClickListener;
+    private final OnFolderClickListener onFolderClickListener;
 
     public interface OnFolderClickListener {
         void onFolderClick(ItineraryFolder folder);
     }
 
-    public ItineraryAdapter(List<ItineraryFolder> folders, OnFolderClickListener folderClickListener) {
+    public FolderAdapter(List<ItineraryFolder> folders, OnFolderClickListener listener) {
         this.folders = folders;
-        this.folderClickListener = folderClickListener;
+        this.onFolderClickListener = listener;
     }
 
     @NonNull
@@ -45,12 +40,11 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.View
         ItineraryFolder folder = folders.get(position);
         holder.folderName.setText(folder.getName());
 
-        String formattedDate = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-                .format(folder.getCreationDate());
-        holder.creationDate.setText("Created on: " + formattedDate);
-
-        // Handle the click event and pass the folder directly
-        holder.itemView.setOnClickListener(v -> folderClickListener.onFolderClick(folder));
+        // Set click listener to handle folder selection
+        holder.itemView.setOnClickListener(v -> {
+            Log.d("FolderAdapter", "Folder clicked: " + folder.getName());
+            onFolderClickListener.onFolderClick(folder);  // Invoke the click listener
+        });
     }
 
     @Override
@@ -60,12 +54,10 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView folderName;
-        TextView creationDate;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             folderName = itemView.findViewById(R.id.folder_name);
-            creationDate = itemView.findViewById(R.id.folder_creation_date);
         }
     }
 }

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="5dp"
+    android:paddingLeft="16dp">
+
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/btn_back_itinerary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:text="Back" />
+
+    <!-- Itinerary Title -->
+    <TextView
+        android:id="@+id/itinerary_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_marginTop="8dp"
+        android:text="Itinerary Date" />
+
+    <!-- Itinerary Date -->
+    <TextView
+        android:id="@+id/itinerary_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="8dp"
+        android:text="Itinerary Date" />
+
+    <!-- Starting Location -->
+    <TextView
+        android:id="@+id/itinerary_start_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Starting Point" />
+
+    <!-- First Stop Details -->
+    <TextView
+        android:id="@+id/stop_1_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:text="Stop 1: Name" />
+
+    <TextView
+        android:id="@+id/stop_1_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Address" />
+
+    <TextView
+        android:id="@+id/stop_1_time_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Time and Distance" />
+
+    <!-- Second Stop Details -->
+    <TextView
+        android:id="@+id/stop_2_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_marginTop="20dp"
+        android:text="Stop 2: Name" />
+
+    <TextView
+        android:id="@+id/stop_2_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Address" />
+
+    <TextView
+        android:id="@+id/stop_2_time_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Time and Distance" />
+
+</LinearLayout>
