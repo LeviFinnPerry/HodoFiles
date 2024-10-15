@@ -36,9 +36,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent swap = new Intent(this, MapsActivity.class);
-        startActivity(swap);
-
         //Set default fragment when the app loads
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.searchfeed_container, new SearchFeedFragment()).commit();
@@ -75,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
                      */
 
                     if (item.getItemId() == R.id.nav_map) {
-                        selectedFragment = new MapsFragment();
+                        Intent swap = new Intent(MainActivity.this, MapsActivity.class);
+                        startActivity(swap);
                     } else if (item.getItemId() == R.id.nav_searchfeed){
                         selectedFragment = new SearchFeedFragment();
                     } else if (item.getItemId() == R.id.nav_itinerary){

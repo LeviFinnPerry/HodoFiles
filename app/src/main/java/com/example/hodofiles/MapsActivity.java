@@ -1,5 +1,6 @@
 package com.example.hodofiles;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.Manifest;
@@ -122,6 +123,12 @@ public class MapsActivity  extends FragmentActivity implements OnMapReadyCallbac
         });
     }
 
+    public void swap()
+    {
+        Intent swap = new Intent(this, MainActivity.class);
+        startActivity(swap);
+    }
+
 
     /**
      * setAutoCompleteFragment - sets up the search bar at the top of the map, which allows the
@@ -149,8 +156,8 @@ public class MapsActivity  extends FragmentActivity implements OnMapReadyCallbac
                 @Override
                 public void onPlaceSelected(@NonNull Place place) {
                     latLng = place.getLocation();
-
                     displayCurrentLocation();
+                    swap();
                 }
 
                 /**

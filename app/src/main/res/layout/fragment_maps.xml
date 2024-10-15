@@ -35,12 +35,13 @@
             android:src="@android:drawable/ic_menu_sort_by_size"
             tools:ignore="TouchTargetSizeCheck" />
 
-        <SearchView
-            android:id="@+id/searchView"
+        <androidx.fragment.app.FragmentContainerView android:id="@+id/autocomplete_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/search_places"
-            android:padding="8dp" />
+            android:layout_weight="3"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+
+            tools:layout="@layout/places_autocomplete_fragment" />
 
     </LinearLayout>
 
