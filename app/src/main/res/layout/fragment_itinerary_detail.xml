@@ -22,16 +22,8 @@
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:layout_marginTop="8dp"
-        android:text="Itinerary Date" />
+        android:text="Itinerary Title" />
 
-    <!-- Itinerary Date -->
-    <TextView
-        android:id="@+id/itinerary_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginTop="8dp"
-        android:text="Itinerary Date" />
 
     <!-- Starting Location -->
     <TextView
@@ -48,14 +40,14 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:layout_marginTop="20dp"
-        android:text="Stop 1: Name" />
+        android:text="Sky Tower" />
 
     <TextView
         android:id="@+id/stop_1_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Address" />
+        android:text="Victoria Street West, Auckland" />
 
     <TextView
         android:id="@+id/stop_1_time_distance"
@@ -71,14 +63,14 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:layout_marginTop="20dp"
-        android:text="Stop 2: Name" />
+        android:text="Cornwall Park" />
 
     <TextView
         android:id="@+id/stop_2_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Address" />
+        android:text="Green Lane West, Epsom, Auckland" />
 
     <TextView
         android:id="@+id/stop_2_time_distance"
