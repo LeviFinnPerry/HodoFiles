@@ -25,6 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.searchfeed.PlaceDetailActivity"
+            android:exported="false">
+        </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAmeofIZbv8pgpxghqjKb_WOw_M6KSZ9So"/>

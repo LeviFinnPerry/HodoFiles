@@ -9,7 +9,7 @@
         android:id="@+id/navigation_map"
         android:name="com.example.hodofiles.ui.maps.MapsFragment"
         android:label= "@string/title_map"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/navigation_searchfeed"
