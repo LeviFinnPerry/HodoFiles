@@ -4,6 +4,7 @@
     <string name="title_searchfeed">SearchFeed</string>
     <string name="title_itinerary">Itinerary</string>
     <string name="title_settings">Settings</string>
+    <string name="google_maps_key">AIzaSyAmeofIZbv8pgpxghqjKb_WOw_M6KSZ9So</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
