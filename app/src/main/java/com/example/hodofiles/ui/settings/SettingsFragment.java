@@ -30,7 +30,7 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //Get the current preference
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         //Handle current theme with switch syncing
         SwitchCompat themeSwitch = view.findViewById(R.id.switch_theme);
