@@ -128,6 +128,7 @@ public class SearchFeedAdapter extends BaseAdapter {
                 Log.d(TAG, "Photo set for place: " + placeName);
             } else {
                 //vh.imgLineOne.setImageResource(R.drawable.museum);  // Set a placeholder image
+                vh.placeName.setText(placeName);
                 Log.d(TAG, "No photo available, using placeholder for place: " + placeName);
             }
 

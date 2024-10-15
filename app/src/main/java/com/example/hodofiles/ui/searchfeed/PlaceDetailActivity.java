@@ -75,7 +75,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
                             + place.getOpeningHours().getWeekdayText().get(0));
                 }
 
-                contactTextView.setText(place.getPhoneNumber());
+                if (place.getPhoneNumber() != null) {
+                    contactTextView.setText("Contact: " + place.getPhoneNumber());
+                }
 
                 // Fetch the first available photo, if any
                 List<PhotoMetadata> photoMetadataList = place.getPhotoMetadatas();
