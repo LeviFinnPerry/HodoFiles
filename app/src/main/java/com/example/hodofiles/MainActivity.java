@@ -1,69 +1,89 @@
 package com.example.hodofiles;
-import android.Manifest;
-import android.content.Intent;
-import android.os.Bundle;
-import android.content.pm.PackageManager;
-import android.view.View;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.ActionBar;
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
+import androidx.fragment.app.Fragment;
 
 import com.example.hodofiles.ui.Itinerary.ItineraryFragment;
-import com.example.hodofiles.ui.Itinerary.ItineraryViewModel;
 import com.example.hodofiles.ui.maps.MapsFragment;
-import com.example.hodofiles.ui.maps.MapsViewModel;
 import com.example.hodofiles.ui.searchfeed.SearchFeedFragment;
 import com.example.hodofiles.ui.searchfeed.SearchFeedViewModel;
 import com.example.hodofiles.ui.settings.SettingsFragment;
-import com.example.hodofiles.ui.settings.SettingsViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    //Declare viewable models
+    /**
+    private MapsViewModel mapsViewModel;
+    private SearchFeedViewModel searchFeedViewModel;
+    private ItineraryViewModel itineraryViewModel;
+    private SettingsViewModel settingsViewModel;
+    */
+
+    //Declare fragments
+    //private MapsFragment mapsFragment;
+    private SearchFeedFragment searchfeedFragment;
+    //private ItineraryFragment itineraryFragment;
+    //private SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Removes/Hides the action bar from the screen
-        ActionBar actionbar = getSupportActionBar();
-        if (actionbar != null) actionbar.hide();
-
-        // Checks if location has been granted
-        checkLocationPermissionGranted();
-
-        Intent swap = new Intent(this, MapsActivity.class);
-        startActivity(swap);
-    }
-
-    public void checkLocationPermissionGranted() {
-        // Checks if the location permissions have been granted
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            // If access to the users location hasn't been specified, a request is then generated.
-            ActivityResultLauncher<String[]> locationPermissionRequest =
-                    registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
-                        result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
-                        result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false);
-                    });
-
-            // Generate the location permission request to the user
-            locationPermissionRequest.launch(new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            });
+        //Set default fragment when the app loads
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SearchFeedFragment()).commit();
         }
+
+        //Handle bottom navigation item clicks
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
     }
 
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    Fragment selectedFragment = null;
 
+                    /**
+                     switch (item.getItemId()) {
+                     case R.id.navigation_map:
+                     selectedFragment = new MapFragment();
+                     break;
+                     case R.id.navigation_searchfeed:
+                     selectedFragment = new SearchfeedFragment();
+                     break;
+                     case R.id.navigation_itinerary:
+                     selectedFragment = new ItineraryFragment();
+                     break;
+                     case R.id.navigation_settings:
+                     selectedFragment = new SettingsFragment();
+                     break;
+                     }
+                     */
+
+                    if (item.getItemId() == R.id.nav_map) {
+                        selectedFragment = new MapsFragment();
+                    } else if (item.getItemId() == R.id.nav_searchfeed){
+                        selectedFragment = new SearchFeedFragment();
+                    } else if (item.getItemId() == R.id.nav_itinerary){
+                        selectedFragment = new ItineraryFragment();
+                    } else if (item.getItemId() == R.id.nav_settings){
+                        selectedFragment = new SettingsFragment();
+                    }
+
+                    //Replace current fragment with the selected one
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+
+                    return true;
+                }
+            };
 
 }
