@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private SearchView searchView;
     private PlacesClient placesClient;
+    private LatLng currentLatLng;  // To store the current selected LatLng
+    private Button goToSearchFeedButton;
 
     @Nullable
     @Override
@@ -39,6 +42,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         searchView = view.findViewById(R.id.search_view);
+        goToSearchFeedButton = view.findViewById(R.id.btn_go_to_search_feed);
 
         // Initialize the Places API
         Places.initialize(requireContext(), getString(R.string.google_maps_key));
@@ -53,12 +57,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchPlace(query);
-                return true; // return true to indicate that the query has been handled
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
+            }
+        });
+
+        // Button to navigate to SearchFeedFragment
+        goToSearchFeedButton.setOnClickListener(v -> {
+            if (currentLatLng != null) {
+                // Use Singleton Class to pass data
+                LatLong locationData = LatLong.getInstance();
+                locationData.setLatitude(currentLatLng.latitude);
+                locationData.setLongitude(currentLatLng.longitude);
+
+                // Navigate to SearchFeedFragment
+                SearchFeedFragment searchFeedFragment = new SearchFeedFragment();
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, searchFeedFragment)
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                Toast.makeText(getContext(), "No location selected", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -73,9 +96,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         LatLng defaultLocation = new LatLng(-37.788101, 175.276993);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
     }
-
-
-
 
     private void searchPlace(String query) {
         FindAutocompletePredictionsRequest predictionsRequest = FindAutocompletePredictionsRequest.builder()
@@ -96,29 +116,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             placesClient.fetchPlace(placeRequest).addOnSuccessListener(placeResponse -> {
                 Place place = placeResponse.getPlace();
                 if (place.getLatLng() != null) {
-                    LatLng latLng = place.getLatLng();
-                    //  Toast.makeText(getActivity(), "Latitude: " + latLng.latitude + ", Longitude: " + latLng.longitude, Toast.LENGTH_LONG).show();
+                    currentLatLng = place.getLatLng();  // Store the current LatLng
 
-                    // Pass Lat and Long to SearhFeedFragment
-                    SearchFeedFragment searchFeedFragment = new SearchFeedFragment();
-
-                    double latitude = latLng.latitude;  // Latitude value
-                    double longitude = latLng.longitude;  // Longitude value
-
-                    // Use Singleton Class to pass data
+                    // Use Singleton Class to pass data to SearchFeedFragment
                     LatLong locationData = LatLong.getInstance();
-                    locationData.setLatitude(latitude);
-                    locationData.setLongitude(longitude);
+                    locationData.setLatitude(currentLatLng.latitude);
+                    locationData.setLongitude(currentLatLng.longitude);
 
-
-                    // Replace the current fragment with SearchFeedFragment
-                    getParentFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, searchFeedFragment)
-                            .addToBackStack(null)
-                            .commit();
-
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(place.getName()));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                    // Add a marker at the selected location
+                    mMap.addMarker(new MarkerOptions().position(currentLatLng).title(place.getName()));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
                 }
             }).addOnFailureListener(exception -> {
                 Toast.makeText(getContext(), "Place not found: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
@@ -127,5 +134,4 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(getContext(), "Error fetching autocomplete predictions: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
-
 }
