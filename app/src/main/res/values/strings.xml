@@ -29,6 +29,11 @@
     <string name="park">Park</string>
     <string name="restaurant">Restaurant</string>
     <string name="more">...</string>
+    <string name="theme">SETTINGS</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="interests">Interests</string>
+    <string name="clear_data">Clear Data</string>
+    <string name="export_itinerary">Export Itinerary</string>
 
     <string-array name="button_names">
         <item>Art Gallery</item>
