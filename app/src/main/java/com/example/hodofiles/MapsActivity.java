@@ -148,8 +148,7 @@ public class MapsActivity  extends FragmentActivity implements OnMapReadyCallbac
                  * */
                 @Override
                 public void onPlaceSelected(@NonNull Place place) {
-                    latLng = place.getLocation();
-
+                    latLng = place.getLatLng();
                     displayCurrentLocation();
                 }
 
