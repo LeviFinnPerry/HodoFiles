@@ -70,7 +70,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
 
         // Set a default location (optional)
-        LatLng defaultLocation = new LatLng(-34, 151);
+        LatLng defaultLocation = new LatLng(-37.788101, 175.276993);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
     }
 
@@ -97,15 +97,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 Place place = placeResponse.getPlace();
                 if (place.getLatLng() != null) {
                     LatLng latLng = place.getLatLng();
+                    //  Toast.makeText(getActivity(), "Latitude: " + latLng.latitude + ", Longitude: " + latLng.longitude, Toast.LENGTH_LONG).show();
 
-                    // Create a new SearchFeedFragment and pass the lat/lng values via Bundle
+                    // Pass Lat and Long to SearhFeedFragment
                     SearchFeedFragment searchFeedFragment = new SearchFeedFragment();
 
-                    Bundle bundle = new Bundle();
-                    bundle.putDouble("latitude", latLng.latitude);
-                    bundle.putDouble("longitude", latLng.longitude);
+                    double latitude = latLng.latitude;  // Latitude value
+                    double longitude = latLng.longitude;  // Longitude value
 
-                    searchFeedFragment.setArguments(bundle);
+                    // Use Singleton Class to pass data
+                    LatLong locationData = LatLong.getInstance();
+                    locationData.setLatitude(latitude);
+                    locationData.setLongitude(longitude);
+
 
                     // Replace the current fragment with SearchFeedFragment
                     getParentFragmentManager().beginTransaction()
