@@ -35,6 +35,9 @@
     <string name="interests">Interests</string>
     <string name="clear_data">Clear Data</string>
     <string name="export_itinerary">Export Itinerary</string>
+    <string name="interest_name">Interest Name</string>
+    <string name="interests_title">Interests</string>
+    <string name="image_container">Image Container</string>
 
     <string-array name="button_names">
         <item>Art Gallery</item>
