@@ -1,6 +1,9 @@
 package com.example.hodofiles.ui.searchfeed;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,9 +14,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.etsy.android.grid.StaggeredGridView;
+import com.example.hodofiles.ui.searchfeed.PlaceDetailActivity;
 
 import android.util.Log;
 import android.view.Menu;
@@ -23,50 +28,60 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.hodofiles.R;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
+import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.OpeningHours;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+public class SearchFeedFragment extends Fragment implements AbsListView.OnScrollListener, AbsListView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-public class SearchFeedFragment extends Fragment /**implements AbsListView.OnItemClickListener*/ {
-
-    private static final String API_KEY = "AIzaSyAmeofIZbv8pgpxghqjKb_WOw_M6KSZ9So";
     private static final String TAG = "SearchFeedFragment";
-    private static final String DEFAULT_TYPE = "";
-    private static final String DEFAULT_KEYWORD = "";
-    private static final int DEFAULT_RADIUS = 500;
+    public static final String SAVED_DATA_KEY = "SAVED_DATA";
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final String DEFAULT_QUERY = "beach";
 
     private StaggeredGridView mGridView;
+    private boolean mHasRequestedMore;
     private SearchFeedAdapter mAdapter;
-    private ArrayList<PlacesResponse.PlaceResult> topPlaces;
+    private ArrayList<String> mData;
+    private ArrayList<Place> topPlaces = new ArrayList<>();
     private PlacesClient placesClient;
-    private String location;
+    private String query;
+    private boolean isLoading = false; // To prevent multiple triggers
+    private boolean hasNextPage = true;
 
+
+    // onCreateView is used to inflate the layout of the Fragment
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Initialize Places API
         if (!Places.isInitialized()) {
-            Places.initialize(getContext(), API_KEY);
+            Places.initialize(getContext(), "AIzaSyAmeofIZbv8pgpxghqjKb_WOw_M6KSZ9So");
         }
-
-        // Get location passed from map
-        location = "-33.8670522,151.1957362"; // Sydney, Australia (Lat,Lng)
 
         placesClient = Places.createClient(getContext());
 
@@ -77,8 +92,8 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Handle search query; query must be a Place type or it won't work
-                fetchTopPlaces(DEFAULT_TYPE, location, query);
+                //Handle search query
+                fetchTopPlaces(query);
                 return true;
             }
 
@@ -92,137 +107,315 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
         // Filter buttons
         Button museumButton = rootView.findViewById(R.id.searchfeed_container).findViewById(R.id.category_museum);
         museumButton.setOnClickListener(view -> {
-            fetchTopPlaces("museum", location, DEFAULT_KEYWORD);
+            //Fetch or filter places related to museum
+            query ="museum";
+            fetchTopPlaces(query);
         });
 
         Button parkButton = rootView.findViewById(R.id.searchfeed_container).findViewById(R.id.category_park);
-        parkButton.setOnClickListener(view -> {
-            fetchTopPlaces("park", location, DEFAULT_KEYWORD);
+        museumButton.setOnClickListener(view -> {
+            //Fetch or filter places related to museum
+            query = "park";
+            fetchTopPlaces(query);
         });
 
         Button restaurantButton = rootView.findViewById(R.id.searchfeed_container).findViewById(R.id.category_restaurant);
-        restaurantButton.setOnClickListener(view -> {
-            fetchTopPlaces("restaurant", location, DEFAULT_KEYWORD);
+        museumButton.setOnClickListener(view -> {
+            //Fetch or filter places related to museum
+            query = "museum";
+            fetchTopPlaces(query);
         });
 
         // Initialize grid view and adapter
         mGridView = (StaggeredGridView) rootView.findViewById(R.id.grid_searchfeed);
-        mAdapter = new SearchFeedAdapter(getActivity(), selectedPlace -> {
-            openPlaceDetailsActivity(selectedPlace);
-        });
+        mAdapter = new SearchFeedAdapter(getActivity());
 
-        fetchTopPlaces(DEFAULT_TYPE, location, DEFAULT_KEYWORD);
+        fetchTopPlaces(DEFAULT_QUERY);
 
         mGridView.setAdapter(mAdapter);
-        //mGridView.setOnItemClickListener(this);
+
+        mGridView.setOnScrollListener(this);
+        mGridView.setOnItemClickListener(this);
+        //mGridView.setOnItemLongClickListener(this);
 
         return rootView;
     }
 
-    /**
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(SAVED_DATA_KEY, mData);
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        Log.d("ScrollStateChanged", "scrollState: " + scrollState);
+
+        if (scrollState == SCROLL_STATE_IDLE) {
+            Log.d("ScrollStateChanged", "Scroll state is idle");
+            if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                Log.d("ScrollStateChanged", "At bottom, fetching more places");
+                //fetchMorePlaces();
+            }
+        } else if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+            Log.d("ScrollStateChanged", "User is scrolling");
+        } else if (scrollState == SCROLL_STATE_FLING) {
+            Log.d("ScrollStateChanged", "List is fling");
+        }
+    }
+
+
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        Log.d("Scroll", "onScroll firstVisibleItem:" + firstVisibleItem +
+                " visibleItemCount:" + visibleItemCount +
+                " totalItemCount:" + totalItemCount);
+
+        // Load more items if needed
+        if (!mHasRequestedMore) {
+            int lastInScreen = firstVisibleItem + visibleItemCount;
+            if (lastInScreen >= totalItemCount) {
+                Log.d(TAG, "onScroll lastInScreen - so load more");
+                mHasRequestedMore = true;
+                //fetchMorePlaces();
+            }
+        }
+    }
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-          PlacesResponse.PlaceResult selectedPlace = topPlaces.get(position);
-          openPlaceDetailsActivity(selectedPlace);
+        Toast.makeText(getContext(), "Item Clicked: " + position, Toast.LENGTH_SHORT).show();
+            Place selectedPlace = topPlaces.get(position);  // Assuming `topPlaces` holds your place data
+            openPlaceDetailsActivity(selectedPlace);
     }
-    */
 
-    private void fetchTopPlaces(String type, String location, String keyword) {
-        topPlaces = new ArrayList<>();
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(getContext(), "Item Long Clicked: " + position, Toast.LENGTH_SHORT).show();
+        return true;
+    }
 
-        int radius = DEFAULT_RADIUS;
+    // Optional: Override onCreateOptionsMenu and onOptionsItemSelected if you need menu handling
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_sgv_dynamic, menu);
+    }
 
-        // Create Retrofit client
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    /**
+     @Override public boolean onOptionsItemSelected(MenuItem item) {
+     switch (item.getItemId()) {
+     case R.id.col1:
+     mGridView.setColumnCount(1);
+     break;
+     case R.id.col2:
+     mGridView.setColumnCount(2);
+     break;
+     case R.id.col3:
+     mGridView.setColumnCount(3);
+     break;
+     }
+     return true;
+     }
+     */
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build();
+    private void openAutocomplete() {
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS);
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                .build(requireContext());
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+    }
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://maps.googleapis.com/maps/api/place/")
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        GooglePlacesAPIService service = retrofit.create(GooglePlacesAPIService.class);
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i("SearchFeedFragment", "Place: " + place.getName() + ", " + place.getId());
 
-        // Make API call to fetch nearby places based on type
-        Call<PlacesResponse> call = service.getNearbyPlaces(location, radius, type, API_KEY, keyword);
-        call.enqueue(new Callback<PlacesResponse>() {
-            @Override
-            public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
-                if (response.isSuccessful()) {
-                    PlacesResponse placesResponse = response.body();
-                    if (placesResponse != null) {
-                        topPlaces = (ArrayList<PlacesResponse.PlaceResult>) placesResponse.getResults();
-                        updateSearchFeed(topPlaces); // Update UI with the results
-                    }
-                } else {
-                    Log.e(TAG, "Request failed: " + response.code());
-                }
+                // Fetch popular places using the selected place's location
+                fetchTopPlaces(DEFAULT_QUERY);
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i("SearchFeedFragment", "Error: " + status.getStatusMessage());
             }
+        }
+    }
 
-            @Override
-            public void onFailure(Call<PlacesResponse> call, Throwable t) {
-                Log.e(TAG, "Error fetching places: " + t.getMessage());
+    private void fetchTopPlaces(String query) {
+        // Set up the keyword or query for the places you want to fetch
+        String setQuery = query;
+
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setQuery(setQuery)
+                .setLocationBias(null) // No boundaries for location
+                .build();
+
+        PlacesClient placesClient = Places.createClient(getContext());
+
+        placesClient.findAutocompletePredictions(request).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FindAutocompletePredictionsResponse response = task.getResult();
+                if (response != null && !response.getAutocompletePredictions().isEmpty()) {
+                    List<AutocompletePrediction> predictions = response.getAutocompletePredictions();
+                    topPlaces.clear();
+                    topPlaces = new ArrayList<>();
+
+                    for (AutocompletePrediction prediction : predictions) {
+                        String placeId = prediction.getPlaceId();
+                        // Fetch place details for each prediction
+                        fetchPlaceDetails(placeId, topPlaces, () -> {
+                            updateSearchFeed(topPlaces);
+                        });
+                    }
+
+                    updateSearchFeed(topPlaces);
+                } else {
+                    Log.d("PlacesAPI", "No predictions found");
+                }
+            } else {
+                Log.e("PlacesAPI", "Error fetching predictions", task.getException());
             }
         });
     }
 
-    private void updateSearchFeed(List<PlacesResponse.PlaceResult> placeResults) {
+
+
+    private void fetchPlaceDetails(String placeId, ArrayList<Place> newPlaces, Runnable callback) {
+        // Check if placeId already exists
+        for (Place existingPlace : topPlaces) {
+            if (existingPlace.getId().equals(placeId)) {
+                return;
+            }
+        }
+
+        // Specify which fields to retrieve for the place
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG,
+                Place.Field.PHOTO_METADATAS, Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.PHONE_NUMBER);
+
+        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields).build();
+
+        placesClient.fetchPlace(request).addOnSuccessListener(response -> {
+            Place place = response.getPlace();
+            newPlaces.add(place);
+            Log.d("PlacesAPI", "Fetched place details for: " + place.getName());
+            // Call the callback when done fetching a place
+            callback.run();
+        }).addOnFailureListener(e -> {
+            Log.e("PlacesAPI", "Error fetching place details", e);
+        });
+    }
+
+
+    private void updateSearchFeed(List<Place> nearbyPlaces) {
         // Log the number of places received
-        Log.d("SearchFeedResult", "Number of places received: " + placeResults.size());
+        Log.d("SearchFeed", "Number of places received: " + nearbyPlaces.size());
 
         // Clear the adapter's old data
         mAdapter.clearPlaces();
 
         // Loop through the nearby places and add them to your adapter
-        for (PlacesResponse.PlaceResult placeResult : placeResults) {
+        for (Place place : nearbyPlaces) {
             // Log the place details for each place
-            String placeName = placeResult.getName();
+            String placeName = place.getName();
             Log.d("SearchFeed", "Processing place: " + placeName);
 
+            LatLng placeLatLng = place.getLatLng();
+            Log.d("SearchFeed", "Place LatLng: " + placeLatLng);
+
             // Fetch and display the place image
-            List<PlacesResponse.PlaceResult.Photo> photoList = placeResult.getPhotos();
-            if (photoList != null && !photoList.isEmpty()) {
-                String photoReference = photoList.get(0).getPhotoReference();
-
-                // Create a PhotoMetadata object
-                PhotoMetadata photoMetadata = PhotoMetadata.builder(photoReference).build();
-
-                // Create a photo request
-                FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                        .setMaxWidth(500)  // Set max width (you can adjust this)
-                        .setMaxHeight(300) // Set max height (you can adjust this)
-                        .build();
+            List<PhotoMetadata> photoMetadataList = place.getPhotoMetadatas();
+            if (photoMetadataList != null && !photoMetadataList.isEmpty()) {
+                PhotoMetadata photoMetadata = photoMetadataList.get(0);
+                FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata).build();
 
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener(fetchPhotoResponse -> {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
 
+                    // Log when a photo is fetched successfully
+                    Log.d("SearchFeed", "Fetched photo for place: " + placeName);
+
                     // Set place name and image to your adapter
-                    mAdapter.addPlaceWithPhoto(placeResult, bitmap);
-                    Log.d("SearchFeed", "Added place with photo to adapter: " + placeName);
+                    mAdapter.addPlaceWithPhoto(place, bitmap);
+                    Log.d("SearchFeed", "Added place to adapter: " + placeName);
+                }).addOnFailureListener(e -> {
+                    // Log any errors while fetching the photo
+                    Log.e("SearchFeed", "Failed to fetch photo for place: " + placeName, e);
                 });
             } else {
                 Log.d("SearchFeed", "No photos available for place: " + placeName);
-                // Add place without a photo
-                mAdapter.addPlaceWithPhoto(placeResult, null);
             }
         }
 
-        // Notify the adapter to update the grid/list view
+        // Log before notifying the adapter
         Log.d("SearchFeed", "Notifying adapter that data has changed");
-        mAdapter.notifyDataSetChanged();  // Update the grid/list view
+        mAdapter.notifyDataSetChanged(); // Update the grid/list view
+        //mHasRequestedMore = false;
     }
 
-    private void openPlaceDetailsActivity(PlacesResponse.PlaceResult place) {
+    private int pageCounter = 1; // Track how many times you've loaded more data
+
+    private void fetchMorePlaces() {
+        if (isLoading || !hasNextPage) {
+            return; // Prevent multiple triggers
+        }
+
+        isLoading = true; // Set loading flag to prevent multiple triggers
+
+        // Modify the query to fetch new data (append page number or other variation)
+        String modifiedQuery = query + pageCounter;
+
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setQuery(modifiedQuery)
+                .setLocationBias(null)  // Adjust if needed, or add bias for location
+                .build();
+
+        placesClient.findAutocompletePredictions(request).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FindAutocompletePredictionsResponse response = task.getResult();
+                List<AutocompletePrediction> predictions = response.getAutocompletePredictions();
+
+                if (predictions != null && !predictions.isEmpty()) {
+                    ArrayList<Place> newPlaces = new ArrayList<>();
+                    for (AutocompletePrediction prediction : predictions) {
+                        String placeId = prediction.getPlaceId();
+                        fetchPlaceDetails(placeId, newPlaces, () -> {
+                            // Callback when new place details are fetched
+                            updateSearchFeed(newPlaces);
+                        });
+                    }
+
+                    // Append new places to the existing list
+                    topPlaces.addAll(newPlaces);
+
+                    pageCounter++; // Increment page count
+                    mHasRequestedMore = false; // Reset scroll flag
+                } else {
+                    hasNextPage = false; // Stop if no more predictions
+                }
+            } else {
+                Log.e("PlacesAPI", "Error fetching more places");
+            }
+
+            isLoading = false; // Reset loading flag
+        });
+    }
+
+    private void openPlaceDetailsActivity(Place place) {
         Intent intent = new Intent(getActivity(), PlaceDetailActivity.class);
 
-        intent.putExtra("PLACE_ID", place.getPlaceId());
+        // Set other place details
+        intent.putExtra("PLACE_NAME", place.getName());
+        intent.putExtra("PLACE_ADDRESS", place.getAddress());
+        intent.putExtra("PLACE_CONTACT", place.getPhoneNumber()); // You can fetch contact from place object
+        intent.putExtra("PLACE_ID", place.getId());
 
         startActivity(intent);
     }
+
+
 }
 

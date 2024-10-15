@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Set default fragment when the app loads
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SearchFeedFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapsFragment()).commit();
         }
 
         //Handle bottom navigation item clicks

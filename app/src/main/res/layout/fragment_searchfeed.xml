@@ -27,6 +27,7 @@
 
             <LinearLayout
                 android:id="@+id/categories_container"
+                style="?android:attr/buttonBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -34,27 +35,35 @@
 
                 <Button
                     android:id="@+id/category_museum"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Museum" />
+                    android:text="@string/museum"
+                    android:textColor="@color/purple_dark" />
 
                 <Button
                     android:id="@+id/category_park"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Park" />
+                    android:text="@string/park"
+                    android:textColor="@color/purple_dark" />
 
                 <Button
                     android:id="@+id/category_restaurant"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Restaurant" />
+                    android:text="@string/restaurant"
+                    android:textColor="@color/purple_dark"
+                    app:rippleColor="@color/background_purple" />
 
                 <Button
                     android:id="@+id/category_more"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="..." />
+                    android:text="@string/more" />
 
             </LinearLayout>
 

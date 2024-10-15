@@ -1,7 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/theme"
+        android:textSize="20sp" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/dark_mode" />
+
+    <Button
+        android:id="@+id/button_interests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/background_purple_light"
+        android:text="@string/interests" />
+
+    <Button
+        android:id="@+id/button_clear_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/background_purple_light"
+        android:text="@string/clear_data"
+        android:layout_marginTop="24dp" />
+
+    <Button
+        android:id="@+id/button_export_itinerary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/export_itinerary"
+        android:backgroundTint="@color/background_purple_light"
+        android:layout_marginTop="24dp" />
+</LinearLayout>

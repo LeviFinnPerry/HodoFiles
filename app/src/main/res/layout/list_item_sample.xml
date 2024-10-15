@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:id="@+id/panel_content"
     android:layout_width="match_parent"
@@ -32,22 +33,28 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="placeName"/>
+                android:padding="15dp"
+                android:text="@string/placename" />
 
             <Button
+                android:id="@+id/btn_add"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_margin="5dp"
-                android:text="-" />
+                android:layout_weight="1"
+                android:backgroundTint="@color/background_purple_light"
+                app:icon="@drawable/ic_pin_interest_searchfeed"
+                app:iconSize="20dp" />
 
             <Button
                 android:id="@+id/btn_go"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_margin="5dp"
-                android:text="+" />
+                android:layout_weight="1"
+                android:backgroundTint="@color/background_purple_light"
+                app:icon="@drawable/ic_unpin_interest_searchfeed"
+                app:iconSize="20dp" />
 
         </LinearLayout>
 
