@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import com.example.hodofiles.ui.Itinerary.ItineraryFragment;
 import com.example.hodofiles.ui.maps.MapsFragment;
 import com.example.hodofiles.ui.searchfeed.SearchFeedFragment;
-import com.example.hodofiles.ui.searchfeed.SearchFeedViewModel;
 import com.example.hodofiles.ui.settings.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
