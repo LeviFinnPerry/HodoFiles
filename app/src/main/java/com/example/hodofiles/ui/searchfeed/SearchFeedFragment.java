@@ -58,23 +58,25 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
     private PlacesClient placesClient;
     private String location;
 
-    private double latitude;
-    private double longitude;
+    private double latitude = -17.788101;
+    private double longitude = 175.276993;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        latitude = -37.788101;
-        longitude = 175.276993;
+
+
 
         LatLong locationData = LatLong.getInstance();
 
         // Retrieve the arguments if they exist
-        if (locationData != null) {
+        if (locationData.getLatitude() != 0.0 && locationData.getLongitude() != 0.0) {
             latitude = locationData.getLatitude();
             longitude = locationData.getLongitude();
         }
+
+        Toast.makeText(getActivity(), "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_LONG).show();
 
     }
 
