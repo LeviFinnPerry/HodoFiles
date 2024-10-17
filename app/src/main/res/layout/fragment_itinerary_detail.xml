@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="5dp"
-    android:paddingLeft="16dp">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
     <!-- Back Button -->
     <Button
@@ -15,15 +16,15 @@
         android:layout_marginTop="0dp"
         android:text="Back" />
 
-    <!-- Itinerary Title -->
+
     <TextView
         android:id="@+id/itinerary_detail_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:layout_marginTop="8dp"
-        android:text="Itinerary Title" />
-
+        android:paddingTop="25dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Folder Name" />
 
     <!-- Starting Location -->
     <TextView
@@ -33,50 +34,10 @@
         android:layout_marginTop="8dp"
         android:text="Starting Point" />
 
-    <!-- First Stop Details -->
-    <TextView
-        android:id="@+id/stop_1_name"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/stops_recycler_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:text="Sky Tower" />
-
-    <TextView
-        android:id="@+id/stop_1_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Victoria Street West, Auckland" />
-
-    <TextView
-        android:id="@+id/stop_1_time_distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Time and Distance" />
-
-    <!-- Second Stop Details -->
-    <TextView
-        android:id="@+id/stop_2_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginTop="20dp"
-        android:text="Cornwall Park" />
-
-    <TextView
-        android:id="@+id/stop_2_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Green Lane West, Epsom, Auckland" />
-
-    <TextView
-        android:id="@+id/stop_2_time_distance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Time and Distance" />
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>
