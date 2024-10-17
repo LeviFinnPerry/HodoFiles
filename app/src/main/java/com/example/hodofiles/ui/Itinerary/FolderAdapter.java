@@ -15,7 +15,7 @@ import java.util.List;
 
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder> {
 
-    private final List<ItineraryFolder> folders;
+    private List<ItineraryFolder> folders;
     private final OnFolderClickListener onFolderClickListener;
 
     public interface OnFolderClickListener {
@@ -25,6 +25,18 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
     public FolderAdapter(List<ItineraryFolder> folders, OnFolderClickListener listener) {
         this.folders = folders;
         this.onFolderClickListener = listener;
+    }
+
+    // Method to add a new folder to the list
+    public void addFolder(ItineraryFolder folder) {
+        folders.add(folder);
+        notifyItemInserted(folders.size() - 1);  // Notify that a new item has been inserted
+    }
+
+    // Method to update the entire list of folders
+    public void updateFolders(List<ItineraryFolder> updatedFolders) {
+        this.folders = updatedFolders;
+        notifyDataSetChanged();  // Notify that the entire dataset has changed
     }
 
     @NonNull
@@ -42,7 +54,6 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.ViewHolder
 
         // Set click listener to handle folder selection
         holder.itemView.setOnClickListener(v -> {
-            Log.d("FolderAdapter", "Folder clicked: " + folder.getName());
             onFolderClickListener.onFolderClick(folder);  // Invoke the click listener
         });
     }

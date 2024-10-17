@@ -15,10 +15,10 @@
         android:textStyle="bold"
         android:text="Folder Name" />
 
-    <TextView
-        android:id="@+id/folder_creation_date"
-        android:layout_width="wrap_content"
+    <!-- RecyclerView for displaying the stops within each folder -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/stops_recycler_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:text="Created on: [Date]" />
+        android:layout_marginTop="8dp" />
 </LinearLayout>

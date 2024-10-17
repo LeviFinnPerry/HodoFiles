@@ -35,11 +35,18 @@ public class ItineraryViewModel extends AndroidViewModel {
 
     public void setItineraries(List<ItineraryFolder> newFolders) {
         itineraries.setValue(newFolders);
-        saveFoldersToStorage(newFolders); // Save updates to SharedPreferences
+        saveFoldersToStorage(newFolders);  // Save updates to SharedPreferences
     }
 
     public void setSelectedFolder(ItineraryFolder folder) {
         selectedFolder.setValue(folder);
+    }
+
+    // Add a stop to a folder
+    public void addStopToFolder(ItineraryFolder folder, ItineraryFolder.ItineraryStop stop) {
+        folder.addStop(stop);  // Add the stop to the selected folder
+        saveFoldersToStorage(itineraries.getValue());  // Save the updated list to storage
+        itineraries.setValue(itineraries.getValue());  // Trigger UI update
     }
 
     // Load folders from SharedPreferences

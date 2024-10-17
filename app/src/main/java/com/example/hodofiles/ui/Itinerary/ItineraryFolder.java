@@ -1,11 +1,10 @@
 package com.example.hodofiles.ui.Itinerary;
 
-import com.google.android.gms.location.places.Place;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItineraryFolder {
+public class ItineraryFolder implements Serializable {  // Implement Serializable
     private String name;
     private List<ItineraryStop> stops;  // Ensure stops is initialized properly
     private long creationDate;
@@ -41,7 +40,7 @@ public class ItineraryFolder {
     }
 
     // Nested class for representing individual stops
-    public static class ItineraryStop {
+    public static class ItineraryStop implements Serializable {  // Implement Serializable in ItineraryStop as well
         private String name;
         private String address;
         private long timestamp;
