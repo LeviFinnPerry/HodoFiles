@@ -1,5 +1,8 @@
 package com.example.hodofiles.ui.searchfeed;
 
+import static android.app.PendingIntent.getActivity;
+import static com.example.hodofiles.MainActivity.searchfeedLatlng;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.hodofiles.R;
 import com.example.hodofiles.ui.Itinerary.FolderSelectionFragment;
+import com.example.hodofiles.ui.maps.LatLong;
+import com.example.hodofiles.ui.maps.MapsFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
@@ -43,6 +49,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         TextView contactTextView = findViewById(R.id.place_contact);
         ImageView placeImageView = findViewById(R.id.place_image);
         Button addToItineraryButton = findViewById(R.id.btn_add_itinerary);
+        Button viewOnMapButton = findViewById(R.id.btn_see_less);
 
         // Get the place ID from the intent
         Intent intent = getIntent();
@@ -100,6 +107,24 @@ public class PlaceDetailActivity extends AppCompatActivity {
             );
         }
 
+        viewOnMapButton.setOnClickListener(v -> {
+
+                LatLng k = getIntent().getExtras().getParcelable("LATLNG");
+                // Navigate to MapsFragment
+                MapsFragment mapFragment = new MapsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("LATLNG", k);
+                mapFragment.setArguments(bundle);
+                searchfeedLatlng = k;
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, mapFragment)
+                    .addToBackStack(null)  // This allows the user to navigate back to the previous fragment
+                    .commit();
+                finish();
+
+
+        });
+
         // Add logic for "Add to Itinerary" button click
         addToItineraryButton.setOnClickListener(v -> {
             if (placeName != null && address != null) {
@@ -120,4 +145,14 @@ public class PlaceDetailActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MapsFragment mapsFragment = new MapsFragment();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mapsFragment).commit();
+
+
+    }
 }
+

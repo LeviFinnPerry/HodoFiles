@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.example.hodofiles.ui.Itinerary.ItineraryFragment;
 import com.example.hodofiles.ui.maps.MapsFragment;
 import com.example.hodofiles.ui.searchfeed.SearchFeedFragment;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     //Declare fragments
     //private MapsFragment mapsFragment;
     private SearchFeedFragment searchfeedFragment;
+    public static LatLng searchfeedLatlng;
     //private ItineraryFragment itineraryFragment;
     //private SettingsFragment settingsFragment;
 

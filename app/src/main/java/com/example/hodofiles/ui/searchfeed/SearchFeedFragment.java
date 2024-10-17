@@ -2,17 +2,25 @@ package com.example.hodofiles.ui.searchfeed;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.RequestQueue;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.etsy.android.grid.StaggeredGridView;
 
 import android.util.Log;
@@ -24,17 +32,29 @@ import android.widget.Toast;
 
 import com.example.hodofiles.R;
 import com.example.hodofiles.ui.maps.LatLong;
+import com.example.hodofiles.ui.maps.MapsFragment;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AddressComponent;
+import com.google.android.libraries.places.api.model.AddressComponents;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -134,7 +154,8 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
         mGridView = (StaggeredGridView) rootView.findViewById(R.id.grid_searchfeed);
         mAdapter = new SearchFeedAdapter(getActivity(), selectedPlace -> {
             openPlaceDetailsActivity(selectedPlace);
-        });
+
+                    });
 
         fetchTopPlaces(DEFAULT_TYPE, location, DEFAULT_KEYWORD);
 
@@ -182,6 +203,7 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
                     PlacesResponse placesResponse = response.body();
                     if (placesResponse != null) {
                         topPlaces = (ArrayList<PlacesResponse.PlaceResult>) placesResponse.getResults();
+
                         updateSearchFeed(topPlaces); // Update UI with the results
                     }
                 } else {
@@ -242,12 +264,24 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
         mAdapter.notifyDataSetChanged();  // Update the grid/list view
     }
 
-    private void openPlaceDetailsActivity(PlacesResponse.PlaceResult place) {
+
+
+    private void openPlaceDetailsActivity(PlacesResponse.PlaceResult place) throws IOException {
         Intent intent = new Intent(getActivity(), PlaceDetailActivity.class);
 
+        Geocoder geocoder = new Geocoder(this.getContext());
+        List<Address> k = geocoder.getFromLocationName(place.getAddress(), 1);
+
         intent.putExtra("PLACE_ID", place.getPlaceId());
+        intent.putExtra("LATLNG", new LatLng(k.get(0).getLatitude(), k.get(0).getLongitude()));
 
         startActivity(intent);
+      return;
+
+
     }
+
+
+
 }
 
