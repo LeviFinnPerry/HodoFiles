@@ -45,11 +45,11 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
         // Handle button click
         holder.filterButton.setOnClickListener(v ->
-                Toast.makeText(context, "Selected: " + filter, Toast.LENGTH_SHORT).show());
-                String tag = filterTags[holder.getAdapterPosition()];
-                if (listener != null) {
-                    listener.onFilterSelected(tag);
-                }
+                //Toast.makeText(context, "Selected: " + filter, Toast.LENGTH_SHORT).show());
+                //String tag = filterTags[holder.getAdapterPosition()];
+                //if (listener != null) {
+                    listener.onFilterSelected(filterTags[position]));
+                //}
 
     }
 

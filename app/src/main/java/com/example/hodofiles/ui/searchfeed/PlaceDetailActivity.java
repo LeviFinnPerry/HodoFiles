@@ -120,6 +120,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container, mapFragment)
                     .addToBackStack(null)  // This allows the user to navigate back to the previous fragment
                     .commit();
+
                 finish();
 
 

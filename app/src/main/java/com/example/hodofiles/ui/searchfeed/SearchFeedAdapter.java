@@ -19,6 +19,7 @@ import com.example.hodofiles.R;
 import com.example.hodofiles.ui.Itinerary.FolderSelectionFragment;
 import com.google.android.libraries.places.api.model.Place;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class SearchFeedAdapter extends BaseAdapter {
     private static final SparseArray<Double> sPositionHeightRatios = new SparseArray<Double>();
 
     public interface OnItemClickListener {
-        void onItemClick(PlacesResponse.PlaceResult place);
+        void onItemClick(PlacesResponse.PlaceResult place) throws IOException;
     }
 
     public SearchFeedAdapter(final Context context, OnItemClickListener listener) {
@@ -164,7 +165,11 @@ public class SearchFeedAdapter extends BaseAdapter {
             // Set the click listener for each item
             convertView.setOnClickListener(v -> {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(places.get(position));
+                    try {
+                        onItemClickListener.onItemClick(places.get(position));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
         }

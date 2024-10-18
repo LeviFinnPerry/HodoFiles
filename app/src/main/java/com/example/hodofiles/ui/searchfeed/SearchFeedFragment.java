@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -85,9 +86,6 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-
         LatLong locationData = LatLong.getInstance();
 
         // Retrieve the arguments if they exist
@@ -95,9 +93,6 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
             latitude = locationData.getLatitude();
             longitude = locationData.getLongitude();
         }
-
-        Toast.makeText(getActivity(), "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_LONG).show();
-
     }
 
 
@@ -110,7 +105,6 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
         }
 
         // Get location passed from map
-        //location = "-33.8670522,151.1957362"; // Sydney, Australia (Lat,Lng)
         location = String.valueOf(latitude) + "," + String.valueOf(longitude);
 
         placesClient = Places.createClient(getContext());
@@ -150,12 +144,28 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
             fetchTopPlaces("restaurant", location, DEFAULT_KEYWORD);
         });
 
+        Button moreCategoriesButton = rootView.findViewById(R.id.searchfeed_container).findViewById(R.id.category_more);
+        moreCategoriesButton.setOnClickListener(view -> {
+            FilterBottomSheetDialog filterDialog = new FilterBottomSheetDialog();
+            filterDialog.show(getChildFragmentManager(), "FilterBottomSheetDialog");
+        });
+
+        // Get the passed tag and update the searchfeed if user has selected to filter by category
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String selectedTag = result.getString("selected_tag");
+                if (selectedTag != null) {
+                    fetchTopPlaces(selectedTag, location, DEFAULT_KEYWORD);
+                }
+            }
+        });
+
         // Initialize grid view and adapter
         mGridView = (StaggeredGridView) rootView.findViewById(R.id.grid_searchfeed);
         mAdapter = new SearchFeedAdapter(getActivity(), selectedPlace -> {
             openPlaceDetailsActivity(selectedPlace);
-
-                    });
+        });
 
         fetchTopPlaces(DEFAULT_TYPE, location, DEFAULT_KEYWORD);
 
@@ -164,14 +174,6 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
 
         return rootView;
     }
-
-    /**
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-          PlacesResponse.PlaceResult selectedPlace = topPlaces.get(position);
-          openPlaceDetailsActivity(selectedPlace);
-    }
-    */
 
     private void fetchTopPlaces(String type, String location, String keyword) {
         topPlaces = new ArrayList<>();
@@ -276,9 +278,6 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
         intent.putExtra("LATLNG", new LatLng(k.get(0).getLatitude(), k.get(0).getLongitude()));
 
         startActivity(intent);
-      return;
-
-
     }
 
 
