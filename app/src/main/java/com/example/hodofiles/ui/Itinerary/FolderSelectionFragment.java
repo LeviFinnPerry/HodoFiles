@@ -28,6 +28,18 @@ public class FolderSelectionFragment extends DialogFragment {
     private List<ItineraryFolder> folders = new ArrayList<>(); // Initialize the list
     private ItineraryViewModel viewModel;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            String placeName = args.getString("PLACE_NAME");
+            String address = args.getString("ADDRESS");
+            Log.d("FolderSelectionFragment", "placeName: " + placeName);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

@@ -2,6 +2,7 @@ package com.example.hodofiles.ui.searchfeed;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.etsy.android.grid.util.DynamicHeightImageView;
 import com.example.hodofiles.R;
+import com.example.hodofiles.ui.Itinerary.FolderSelectionFragment;
 import com.google.android.libraries.places.api.model.Place;
 
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ public class SearchFeedAdapter extends BaseAdapter {
     static class ViewHolder {
         DynamicHeightImageView imgLineOne;
         TextView placeName;
-        Button btnGo;
+        Button btnAdd;
     }
 
     private final ArrayList<PlacesResponse.PlaceResult> places;
@@ -72,8 +74,12 @@ public class SearchFeedAdapter extends BaseAdapter {
         }
 
         if (!isDuplicate) {
-            places.add(placeResult);  // Add place to the list
-            placePhotos.put(placeResult.getPlaceId(), photo);  // Store photo in the map using place ID as the key
+            // Only display places with photos
+            // Another possible option: display placeholder image saying photo is unavailable
+            if (photo != null) {
+                places.add(placeResult);  // Add place to the list
+                placePhotos.put(placeResult.getPlaceId(), photo);  // Store photo in the map using place ID as the key
+            }
 
             Log.d(TAG, "Place added: " + placeResult.getName() + ", Photo: " + (photo != null ? "Available" : "Not available"));
             notifyDataSetChanged();  // Notify that data has changed to refresh the grid view
@@ -104,7 +110,7 @@ public class SearchFeedAdapter extends BaseAdapter {
             vh = new ViewHolder();
             vh.imgLineOne = (DynamicHeightImageView) convertView.findViewById(R.id.img_line1);
             vh.placeName = (TextView) convertView.findViewById(R.id.place_name);
-            vh.btnGo = (Button) convertView.findViewById(R.id.btn_go);
+            vh.btnAdd = (Button) convertView.findViewById(R.id.btn_add);
             convertView.setTag(vh);
         } else {
             vh = (ViewHolder) convertView.getTag();
@@ -132,47 +138,59 @@ public class SearchFeedAdapter extends BaseAdapter {
                 Log.d(TAG, "No photo available, using placeholder for place: " + placeName);
             }
 
-            // Set the button action
-            vh.btnGo.setOnClickListener(new View.OnClickListener() {
+            // Add to itinerary button
+            vh.btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    Toast.makeText(mContext, "Clicked on " + placeName, Toast.LENGTH_SHORT).show();
+                    if (place.getName() != null && place.getAddress() != null) {
+                        // Create and show the FolderSelectionFragment
+                        FolderSelectionFragment fragment = new FolderSelectionFragment();
+
+                        // Pass the place details to the fragment via arguments
+                        Bundle args = new Bundle();
+                        args.putString("PLACE_NAME", place.getName());
+                        args.putString("ADDRESS", place.getAddress());
+                        fragment.setArguments(args);
+
+                        // Show the folder selection dialog fragment
+                        //fragment.show(getSupportFragmentManager(), "FolderSelection");
+                    } else {
+                        // Log error if place details are missing
+                        Log.e("PlaceDetailActivity", "Place name or address is missing.");
+                    }
                 }
             });
-        } else {
-            Log.e(TAG, "Error: Place is null at position " + position);
+
+            // Set the click listener for each item
+            convertView.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(places.get(position));
+                }
+            });
         }
-
-        // Set the click listener for each item
-        convertView.setOnClickListener(v -> {
-            if (onItemClickListener != null) {
-                onItemClickListener.onItemClick(places.get(position));
-            }
-        });
-
         return convertView;
     }
 
-    private double getPositionRatio(final int position) {
-        double ratio = sPositionHeightRatios.get(position, 0.0);
-        if (ratio == 0) {
-            ratio = getRandomHeightRatio();
-            sPositionHeightRatios.append(position, ratio);
-            Log.d(TAG, "getPositionRatio:" + position + " ratio:" + ratio);
+        private double getPositionRatio ( final int position){
+            double ratio = sPositionHeightRatios.get(position, 0.0);
+            if (ratio == 0) {
+                ratio = getRandomHeightRatio();
+                sPositionHeightRatios.append(position, ratio);
+                Log.d(TAG, "getPositionRatio:" + position + " ratio:" + ratio);
+            }
+            return ratio;
         }
-        return ratio;
-    }
 
-    private double getRandomHeightRatio() {
-        return (mRandom.nextDouble() / 2.0) + 1.0;  // height will be 1.0 - 1.5 the width
-    }
-
-    public void clearPlaces() {
-        if (places != null) {
-            places.clear();
-            notifyDataSetChanged();
+        private double getRandomHeightRatio () {
+            return (mRandom.nextDouble() / 2.0) + 1.0;  // height will be 1.0 - 1.5 the width
         }
-    }
+
+        public void clearPlaces () {
+            if (places != null) {
+                places.clear();
+                notifyDataSetChanged();
+            }
+        }
 
 
 }

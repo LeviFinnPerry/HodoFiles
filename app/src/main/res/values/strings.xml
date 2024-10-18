@@ -29,7 +29,7 @@
     <string name="museum">Museum</string>
     <string name="park">Park</string>
     <string name="restaurant">Restaurant</string>
-    <string name="more">...</string>
+    <string name="more">More Categories...</string>
     <string name="theme">SETTINGS</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="interests">Interests</string>
@@ -39,18 +39,24 @@
     <string name="interests_title">Interests</string>
     <string name="image_container">Image Container</string>
 
-    <string-array name="button_names">
+    <string-array name="place_type_names">
         <item>Art Gallery</item>
         <item>Museum</item>
-        <item>Performing Arts Theatre</item>
+        <item>Theatre</item>
         <item>Library</item>
         <item>Aquarium</item>
         <item>Amusement Park</item>
         <item>Hiking</item>
+        <item>Farm</item>
+        <item>Historical Landmark</item>
+        <item>Marina</item>
+        <item>Zoo</item>
+        <item>Camping</item>
+        <item>Hotel</item>
         <item></item>
     </string-array>
 
-    <string-array name="tags">
+    <string-array name="place_types">
         <item>art_gallery</item>
         <item>museum</item>
         <item>performing_arts_theatre</item>
@@ -58,17 +64,12 @@
         <item>aquarium</item>
         <item>amusement_park</item>
         <item>hiking_area</item>
+        <item>farm</item>
+        <item>historical_landmark</item>
+        <item>marina</item>
+        <item>zoo</item>
+        <item>campground</item>
+        <item>hotel</item>
         <item></item>
-    </string-array>
-
-    <string-array name="sample_searchfeed">
-        <item>sky_tower</item>
-        <item>auckland_art_gallery</item>
-        <item>civic_theatre</item>
-        <item>cornwall_park</item>
-        <item>motat</item>
-        <item>hamilton_gardens</item>
-        <item>mission_bay</item>
-        <item>mt_maunganui</item>
     </string-array>
 </resources>

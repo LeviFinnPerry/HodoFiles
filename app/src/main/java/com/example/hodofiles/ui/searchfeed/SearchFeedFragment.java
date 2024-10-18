@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import com.etsy.android.grid.StaggeredGridView;
 
@@ -64,20 +65,6 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
-        LatLong locationData = LatLong.getInstance();
-
-        // Retrieve the arguments if they exist
-        if (locationData.getLatitude() != 0.0 && locationData.getLongitude() != 0.0) {
-            latitude = locationData.getLatitude();
-            longitude = locationData.getLongitude();
-        }
-
-        Toast.makeText(getActivity(), "Latitude: " + latitude + ", Longitude: " + longitude, Toast.LENGTH_LONG).show();
-
     }
 
 
@@ -90,7 +77,13 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
         }
 
         // Get location passed from map
-        //location = "-33.8670522,151.1957362"; // Sydney, Australia (Lat,Lng)
+        LatLong locationData = LatLong.getInstance();
+
+        // Retrieve the arguments if they exist
+        if (locationData.getLatitude() != 0.0 && locationData.getLongitude() != 0.0) {
+            latitude = locationData.getLatitude();
+            longitude = locationData.getLongitude();
+        }
         location = String.valueOf(latitude) + "," + String.valueOf(longitude);
 
         placesClient = Places.createClient(getContext());
@@ -114,7 +107,7 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
             }
         });
 
-        // Filter buttons
+        // Initialize filter buttons and set listeners
         Button museumButton = rootView.findViewById(R.id.searchfeed_container).findViewById(R.id.category_museum);
         museumButton.setOnClickListener(view -> {
             fetchTopPlaces("museum", location, DEFAULT_KEYWORD);
@@ -130,6 +123,23 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
             fetchTopPlaces("restaurant", location, DEFAULT_KEYWORD);
         });
 
+        Button moreCategoriesButton = rootView.findViewById(R.id.searchfeed_container).findViewById(R.id.category_more);
+        moreCategoriesButton.setOnClickListener(view -> {
+            FilterBottomSheetDialog filterDialog = new FilterBottomSheetDialog();
+            filterDialog.show(getChildFragmentManager(), "FilterBottomSheetDialog");
+        });
+
+        // Get the passed tag and update the searchfeed if user has selected to filter by category
+        getParentFragmentManager().setFragmentResultListener("requestKey", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String selectedTag = result.getString("selected_tag");
+                if (selectedTag != null) {
+                    fetchTopPlaces(selectedTag, location, DEFAULT_KEYWORD);
+                }
+            }
+        });
+
         // Initialize grid view and adapter
         mGridView = (StaggeredGridView) rootView.findViewById(R.id.grid_searchfeed);
         mAdapter = new SearchFeedAdapter(getActivity(), selectedPlace -> {
@@ -139,18 +149,10 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
         fetchTopPlaces(DEFAULT_TYPE, location, DEFAULT_KEYWORD);
 
         mGridView.setAdapter(mAdapter);
-        //mGridView.setOnItemClickListener(this);
 
         return rootView;
     }
 
-    /**
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-          PlacesResponse.PlaceResult selectedPlace = topPlaces.get(position);
-          openPlaceDetailsActivity(selectedPlace);
-    }
-    */
 
     private void fetchTopPlaces(String type, String location, String keyword) {
         topPlaces = new ArrayList<>();
@@ -242,6 +244,7 @@ public class SearchFeedFragment extends Fragment /**implements AbsListView.OnIte
         mAdapter.notifyDataSetChanged();  // Update the grid/list view
     }
 
+    // Open the PlaceDetailActivity when user has selected on a tile
     private void openPlaceDetailsActivity(PlacesResponse.PlaceResult place) {
         Intent intent = new Intent(getActivity(), PlaceDetailActivity.class);
 

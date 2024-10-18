@@ -94,6 +94,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         // Set a default location (optional)
         LatLng defaultLocation = new LatLng(-37.788101, 175.276993);
+        LatLong locationData = LatLong.getInstance();
+        locationData.setLatitude(-37.788101);
+        locationData.setLongitude(175.276993);
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
     }
 

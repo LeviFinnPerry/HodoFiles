@@ -47,7 +47,7 @@
                 app:iconSize="20dp" />
 
             <Button
-                android:id="@+id/btn_go"
+                android:id="@+id/btn_unpin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
