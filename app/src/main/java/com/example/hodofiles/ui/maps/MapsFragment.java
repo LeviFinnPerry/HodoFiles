@@ -1,5 +1,7 @@
 package com.example.hodofiles.ui.maps;
 
+import static com.example.hodofiles.MainActivity.searchfeedLatlng;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,14 +93,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        Bundle bundle = getArguments();
+        if(searchfeedLatlng != null)
+        {
 
-        // Set a default location (optional)
-        LatLng defaultLocation = new LatLng(-37.788101, 175.276993);
-        LatLong locationData = LatLong.getInstance();
-        locationData.setLatitude(-37.788101);
-        locationData.setLongitude(175.276993);
-
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchfeedLatlng, 10));
+        }
+        else
+        {
+            // Set a default location (optional)
+            LatLng defaultLocation = new LatLng(-37.788101, 175.276993);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
+        }
     }
 
     private void searchPlace(String query) {
